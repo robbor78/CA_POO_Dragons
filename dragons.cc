@@ -35,6 +35,12 @@ public:
 
   }
 
+  string getNom() const {return nom_;}
+  int getNiveau() const {return niveau_;}
+  int getPointsDeVie() const {return points_de_vie_;}
+  int getForce() const {return force_;}
+  int getPosition() const {return position_;}
+
   bool vivant() const {return points_de_vie_ > 0;}
 
   int points_attaque() const { return vivant() ? niveau_ * force_ : 0;}
@@ -57,8 +63,36 @@ public:
   }
 };
 
-class Dragon : public Creature {
+class Dragon : protected Creature {
+private:
+  int portee_flamme_;
 
+  bool isInRange(Creature &bete) {
+    int min = position_ - portee_flamme_;
+    int max = position_ + portee_flamme_;
+    int pos = bete.getPosition();
+    return pos >= min && pos <= max;
+  }
+
+public:
+  Dragon(string const &nom, int niveau, int points_de_vie, int force, int portee_flamme, int position=0) :
+    Creature(nom,niveau,points_de_vie,force,position), portee_flamme_(portee_flamme)
+    {}
+
+  void voler(int pos) {
+    position_ = pos;
+  }
+
+  void souffle_sur(Creature &bete) {
+    if (vivant() && bete.vivant() && isInRange(bete)) {
+      bete.faiblir(points_attaque());
+      faiblir(distance(position_,bete.getPosition()));
+
+      if (vivant() && bete.vivant()) {
+        niveau_++;
+      }
+    }
+  }
 };
 
 class Hydre : public Creature {
