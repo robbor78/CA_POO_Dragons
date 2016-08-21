@@ -66,7 +66,7 @@ public:
   }
 
   void afficher() {
-    cout << nom_<<", niveau: "<<niveau_<<", points de vie: "<<points_de_vie_<<", force: "<<force_<<", points d’attaque: "<<points_attaque()<<", position: "<<position_;
+    cout << nom_<<", niveau: "<<niveau_<<", points de vie: "<<points_de_vie_<<", force: "<<force_<<", points d’attaque: "<<points_attaque()<<", position: "<<position_ << endl;
   }
 };
 
@@ -105,11 +105,11 @@ private:
   int dose_poison_;
 
   bool isInRange(Creature &bete) {
-    return Creature::isInRange(bete, longeur_cou);
+    return Creature::isInRange(bete, longeur_cou_);
   }
 
 public:
-  Hydre(string const &nom, int niveau, int points_de_vie, int force, int longeur_cou, int dose_poison,, int position=0) :
+  Hydre(string const &nom, int niveau, int points_de_vie, int force, int longeur_cou, int dose_poison, int position=0) :
     Creature(nom,niveau,points_de_vie,force,position),
     longeur_cou_(longeur_cou),
     dose_poison_(dose_poison)
@@ -127,6 +127,12 @@ public:
     }
   }
 };
+
+void combat(Dragon &d, Hydre &h) {
+  h.empoisonne(d);
+  d.souffle_sur(h);
+}
+
 /*******************************************
  * Ne rien modifier après cette ligne.
  *******************************************/
