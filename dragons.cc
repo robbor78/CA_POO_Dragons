@@ -52,9 +52,9 @@ public:
 
   int points_attaque() const { return vivant() ? niveau_ * force_ : 0;}
 
-  void deplacer(int d) { position_ += d;}
+  void deplacer(int d) { if(vivant()){ position_ += d;}}
 
-  void adieux() const { cout << nom_ << " n'est plus !";}
+  void adieux() const { cout << nom_ << " n'est plus !" << endl;}
 
   void faiblir(int a) {
     points_de_vie_ -= a;
@@ -66,7 +66,7 @@ public:
   }
 
   void afficher() {
-    cout << nom_<<", niveau: "<<niveau_<<", points de vie: "<<points_de_vie_<<", force: "<<force_<<", points d’attaque: "<<points_attaque()<<", position: "<<position_ << endl;
+    cout << nom_<<", niveau: "<<niveau_<<", points de vie: "<<points_de_vie_<<", force: "<<force_<<", points d'attaque: "<<points_attaque()<<", position: "<<position_ << endl;
   }
 };
 
@@ -84,7 +84,9 @@ public:
     {}
 
   void voler(int pos) {
-    position_ = pos;
+    if (vivant()){
+      position_ = pos;
+    }
   }
 
   void souffle_sur(Creature &bete) {
@@ -92,7 +94,7 @@ public:
       bete.faiblir(points_attaque());
       faiblir(distance(position_,bete.position()));
 
-      if (vivant() && bete.vivant()) {
+      if (vivant() && !bete.vivant()) {
         niveau_++;
       }
     }
