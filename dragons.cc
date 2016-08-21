@@ -14,13 +14,54 @@ class Creature
    * Compléter le code à partir d'ici
    *****************************************************/
 
-         << ", niveau: "
-         << ", points de vie: "
-         << ", force: "
-         << ", points d'attaque: "
-         << ", position: "
+         // << ", niveau: "
+         // << ", points de vie: "
+         // << ", force: "
+         // << ", points d'attaque: "
+         // << ", position: "
 
-         << " n'est plus !"
+         // << " n'est plus !"
+
+protected:
+  string const nom_;
+  int niveau_;
+  int points_de_vie_;
+  int force_;
+  int position_;
+
+public:
+  Creature(string const &nom, int niveau, int points_de_vie, int force, int position=0) :
+    nom_(nom), niveau_(niveau), points_de_vie_(points_de_vie), force_(force), position_(position) {
+
+  }
+
+  bool vivant() const {return points_de_vie_ > 0;}
+
+  int points_attaque() const { return vivant() ? niveau_ * force_ : 0;}
+
+  void deplacer(int d) { position_ += d;}
+
+  void adieux() const { cout << nom_ << " n'est plus !";}
+
+  void faiblir(int a) {
+    points_de_vie_ -= a;
+
+    if (!vivant()) {
+      points_de_vie_ = 0;
+      adieux();
+    }
+  }
+
+  void afficher() {
+    cout << nom_<<", niveau: "<<niveau_<<", points de vie: "<<points_de_vie_<<", force: "<<force_<<", points d’attaque: "<<points_attaque()<<", position: "<<position_;
+  }
+};
+
+class Dragon : public Creature {
+
+};
+
+class Hydre : public Creature {
 
 };
 /*******************************************
