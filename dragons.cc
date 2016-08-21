@@ -14,13 +14,13 @@ class Creature
    * Compléter le code à partir d'ici
    *****************************************************/
 
-         // << ", niveau: "
-         // << ", points de vie: "
-         // << ", force: "
-         // << ", points d'attaque: "
-         // << ", position: "
+  // << ", niveau: "
+  // << ", points de vie: "
+  // << ", force: "
+  // << ", points d'attaque: "
+  // << ", position: "
 
-         // << " n'est plus !"
+  // << " n'est plus !"
 
 protected:
   string const nom_;
@@ -29,17 +29,24 @@ protected:
   int force_;
   int position_;
 
+  bool isInRange(Creature &bete, int x) {
+    int min = position_ - x;
+    int max = position_ + x;
+    int pos = bete.position();
+    return pos >= min && pos <= max;
+  }
+
 public:
   Creature(string const &nom, int niveau, int points_de_vie, int force, int position=0) :
     nom_(nom), niveau_(niveau), points_de_vie_(points_de_vie), force_(force), position_(position) {
 
   }
 
-  string getNom() const {return nom_;}
-  int getNiveau() const {return niveau_;}
-  int getPointsDeVie() const {return points_de_vie_;}
-  int getForce() const {return force_;}
-  int getPosition() const {return position_;}
+  string nom() const {return nom_;}
+  int niveau() const {return niveau_;}
+  int points_de_vie() const {return points_de_vie_;}
+  int force() const {return force_;}
+  int position() const {return position_;}
 
   bool vivant() const {return points_de_vie_ > 0;}
 
@@ -63,15 +70,12 @@ public:
   }
 };
 
-class Dragon : protected Creature {
+class Dragon : public Creature {
 private:
   int portee_flamme_;
 
   bool isInRange(Creature &bete) {
-    int min = position_ - portee_flamme_;
-    int max = position_ + portee_flamme_;
-    int pos = bete.getPosition();
-    return pos >= min && pos <= max;
+    return Creature::isInRange(bete, portee_flamme_);
   }
 
 public:
@@ -86,7 +90,7 @@ public:
   void souffle_sur(Creature &bete) {
     if (vivant() && bete.vivant() && isInRange(bete)) {
       bete.faiblir(points_attaque());
-      faiblir(distance(position_,bete.getPosition()));
+      faiblir(distance(position_,bete.position()));
 
       if (vivant() && bete.vivant()) {
         niveau_++;
@@ -96,7 +100,32 @@ public:
 };
 
 class Hydre : public Creature {
+private:
+  int longeur_cou_;
+  int dose_poison_;
 
+  bool isInRange(Creature &bete) {
+    return Creature::isInRange(bete, longeur_cou);
+  }
+
+public:
+  Hydre(string const &nom, int niveau, int points_de_vie, int force, int longeur_cou, int dose_poison,, int position=0) :
+    Creature(nom,niveau,points_de_vie,force,position),
+    longeur_cou_(longeur_cou),
+    dose_poison_(dose_poison)
+    {
+
+    }
+
+  void empoisonne(Creature &bete) {
+    if (vivant() && bete.vivant() && isInRange(bete)) {
+      bete.faiblir(points_attaque() + dose_poison_);
+
+      if (!bete.vivant()) {
+        niveau_++;
+      }
+    }
+  }
 };
 /*******************************************
  * Ne rien modifier après cette ligne.
